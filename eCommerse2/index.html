@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>JK eCommerse</title>
+
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <header class="topbar">
+    <a
+      class="logo"
+      href="#"
+      onclick="showPage('explore'); return false;">
+      JK eCommerse<span>.</span>
+    </a>
+
+    <nav>
+      <button
+        id="exploreNav"
+        class="nav-button active"
+        onclick="showPage('explore')">
+        Explore
+      </button>
+
+      <button
+        id="cartNav"
+        class="nav-button"
+        onclick="showPage('cart')">
+        Cart <span id="cartCount">0</span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="explorePage">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">GOOD STYLE. SECOND CHANCES.</p>
+
+          <h1>Wear the story.<br><em>Not the price.</em></h1>
+
+          <p>
+            Discover pre-loved fashion with local delivery
+            within 20 km of LPU.
+          </p>
+
+          <button
+            class="dark-button"
+            onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+            Explore collection ↘
+          </button>
+        </div>
+
+        <div class="hero-photo">
+          <img
+            src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1000&q=85"
+            alt="Fashion collection">
+
+          <span class="photo-label">PRE-LOVED / RE-LOVED</span>
+        </div>
+      </section>
+
+      <section class="shop-section" id="products">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">THE GOOD FINDS</p>
+            <h2>Explore the rack</h2>
+          </div>
+
+          <input
+            id="searchInput"
+            type="search"
+            aria-label="Search products"
+            placeholder="Search clothes..."
+            oninput="renderProducts()">
+        </div>
+
+        <div class="filters">
+          <button
+            class="filter-button selected"
+            onclick="setCategory('All', this)">
+            All pieces
+          </button>
+
+          <button
+            class="filter-button"
+            onclick="setCategory('Tops', this)">
+            Tops
+          </button>
+
+          <button
+            class="filter-button"
+            onclick="setCategory('Bottoms', this)">
+            Bottoms
+          </button>
+
+          <button
+            class="filter-button"
+            onclick="setCategory('Outerwear', this)">
+            Outerwear
+          </button>
+
+          <button
+            class="filter-button"
+            onclick="setCategory('Accessories', this)">
+            Accessories
+          </button>
+        </div>
+
+        <div class="product-grid" id="productGrid"></div>
+      </section>
+    </section>
+
+    <section id="cartPage" class="hidden">
+      <div class="cart-heading">
+        <p class="eyebrow">YOUR GOOD FINDS</p>
+        <h1>Your cart</h1>
+        <p>Review your items before checkout.</p>
+      </div>
+
+      <div class="cart-layout">
+        <div id="cartItems"></div>
+
+        <aside class="summary">
+          <h2>Order summary</h2>
+
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <strong id="subtotal">₹0</strong>
+          </div>
+
+          <div class="summary-row">
+            <span>Delivery</span>
+            <strong id="delivery">₹0</strong>
+          </div>
+
+          <div class="summary-row total-row">
+            <span>Total</span>
+            <strong id="total">₹0</strong>
+          </div>
+
+          <button
+            class="dark-button full-button"
+            onclick="checkout()">
+            Continue to checkout
+          </button>
+
+          <p class="small-note">
+            ₹60 delivery. Free delivery on product subtotal
+            above ₹1,500. Delivery within 20 km of LPU only.
+          </p>
+
+          <p class="small-note">
+            UPI payment and Cash on Delivery available.
+          </p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      <strong>JK eCommerse.</strong>
+      <p>Good clothes deserve another life.</p>
+    </div>
+
+    <div>
+      <p>
+        WhatsApp:
+        <a
+          href="https://wa.me/918960597012"
+          target="_blank"
+          rel="noopener noreferrer">
+          +91 8960597012
+        </a>
+      </p>
+
+      <p>
+        Email:
+        <a href="mailto:bhaskarsachan32@gmail.com">
+          bhaskarsachan32@gmail.com
+        </a>
+      </p>
+
+      <p>Delivery within 20 km of LPU.</p>
+    </div>
+  </footer>
+
+  <dialog id="checkoutDialog" aria-labelledby="checkoutTitle">
+    <button
+      type="button"
+      class="close-dialog"
+      onclick="document.getElementById('checkoutDialog').close()"
+      aria-label="Close checkout">
+      ×
+    </button>
+
+    <p class="eyebrow">JK ECOMMERSE · CHECKOUT</p>
+    <h2 id="checkoutTitle">Delivery & payment</h2>
+
+    <p>
+      Enter your delivery details. The shop will confirm
+      stock and delivery eligibility on WhatsApp.
+    </p>
+
+    <form id="checkoutForm">
+      <div class="form-grid">
+        <label>
+          Full name
+          <input
+            name="customer"
+            autocomplete="name"
+            required
+            maxlength="80"
+            placeholder="Your full name">
+        </label>
+
+        <label>
+          Mobile number
+          <input
+            name="phone"
+            type="tel"
+            autocomplete="tel"
+            inputmode="numeric"
+            pattern="[6-9][0-9]{9}"
+            title="Enter a valid 10-digit Indian mobile number"
+            required
+            maxlength="10"
+            placeholder="10-digit mobile number">
+        </label>
+
+        <label class="wide">
+          Delivery address
+          <textarea
+            name="address"
+            autocomplete="street-address"
+            required
+            minlength="10"
+            maxlength="400"
+            rows="3"
+            placeholder="House / hostel, room, street and locality"></textarea>
+        </label>
+
+        <label>
+          PIN code
+          <input
+            name="pincode"
+            autocomplete="postal-code"
+            inputmode="numeric"
+            pattern="[1-9][0-9]{5}"
+            title="Enter a valid 6-digit PIN code"
+            required
+            maxlength="6"
+            placeholder="PIN code">
+        </label>
+
+        <label>
+          Landmark (optional)
+          <input
+            name="landmark"
+            maxlength="100"
+            placeholder="Nearby landmark">
+        </label>
+      </div>
+
+      <label class="check-label">
+        <input type="checkbox" name="area" required>
+        <span>
+          I confirm my delivery address is within 20 km of LPU.
+        </span>
+      </label>
+
+      <label>
+        Payment method
+        <select
+          name="payment"
+          id="paymentMethod"
+          onchange="updatePaymentView()">
+          <option value="cod">Cash on Delivery (COD)</option>
+          <option value="upi">UPI — QR / Open payment app</option>
+        </select>
+      </label>
+
+      <section id="codInstructions" class="payment-info">
+        <h3>Cash on Delivery</h3>
+        <p>
+          Pay the confirmed order total when your order is delivered.
+        </p>
+      </section>
+
+      <section id="upiInstructions" class="payment-info hidden">
+        <h3>Pay using UPI</h3>
+
+        <p>
+          Send your order on WhatsApp first.
+          Pay after the shop confirms stock, address and total.
+        </p>
+
+        <div class="upi-qr-panel">
+          <h3>Scan QR to pay</h3>
+
+          <canvas
+            id="upiQr"
+            width="328"
+            height="328"
+            role="img"
+            aria-label="UPI QR for bhaskarsachan31@pingpay">
+          </canvas>
+
+          <p id="qrAmount" class="checkout-total"></p>
+
+          <p>
+            Scan using another phone and enter the exact
+            amount shown above.
+          </p>
+
+          <button
+            type="button"
+            class="add-button"
+            onclick="downloadQr()">
+            Download QR
+          </button>
+        </div>
+
+        <p>
+          UPI ID:
+          <strong class="upi-id">bhaskarsachan31@pingpay</strong>
+        </p>
+
+        <div class="payment-actions">
+          <button
+            type="button"
+            class="add-button"
+            onclick="copyUpi()">
+            Copy UPI ID
+          </button>
+
+          <a id="upiPayLink" class="dark-button payment-link">
+            Open UPI app
+          </a>
+        </div>
+
+        <p class="small-note">
+          On a supported mobile device, Open UPI app passes
+          the UPI ID and order amount to your payment app.
+          Check the recipient before paying.
+        </p>
+
+        <p class="small-note">
+          Payment is manually verified by the shop.
+          Opening an app or scanning the QR does not confirm payment.
+        </p>
+      </section>
+
+      <p id="checkoutTotal" class="checkout-total"></p>
+
+      <button type="submit" class="dark-button full-button">
+        Prepare order for WhatsApp
+      </button>
+
+      <p class="small-note">
+        Your details will be included in a WhatsApp draft.
+        Press Send in WhatsApp to submit your order request.
+      </p>
+    </form>
+
+    <section id="orderDraft" class="hidden" aria-live="polite">
+      <h3>Your order draft is ready</h3>
+
+      <p>
+        Open WhatsApp and press <strong>Send</strong>.
+        Your order is confirmed only after the shop replies.
+      </p>
+
+      <textarea
+        id="orderText"
+        rows="12"
+        readonly
+        aria-label="Order message"></textarea>
+
+      <div class="payment-actions">
+        <a
+          id="whatsappOrderLink"
+          class="dark-button payment-link"
+          target="_blank"
+          rel="noopener noreferrer">
+          Open WhatsApp to send order
+        </a>
+
+        <button
+          type="button"
+          class="add-button"
+          onclick="copyOrder()">
+          Copy order message
+        </button>
+      </div>
+
+      <p class="small-note">
+        For UPI orders, share the transaction reference on WhatsApp
+        after payment. The shop will check receipt manually.
+      </p>
+    </section>
+  </dialog>
+
+  <div id="toast" class="toast" role="status"></div>
+</body>
+</html>
